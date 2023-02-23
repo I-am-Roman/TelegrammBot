@@ -22,3 +22,15 @@ type BotMessage struct {
 	ChatId int    `json:"chat_id"`
 	Text   string `json:"text"`
 }
+
+/*
+	RestResponce:
+		Update:
+			UpdateId
+			Message:
+				Text
+				Chat:
+					ChatId
+
+
+*/

@@ -2,4 +2,4 @@
 .PHONY: run
 # если введем make run - мы выполним команду, описанную нижу 
 run:
-	go run Telegramm/cmd/bot/main.go
+	go run cmd/bot/main.go
