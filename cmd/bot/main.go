@@ -40,21 +40,8 @@ func main() {
 
 	productService := product.NewService()
 
-	some_sub := commands.NewCommander(bot, productService)
+	commander := commands.NewCommander(bot, productService)
 	for update := range updates {
-		if update.Message != nil { // If we got a message
-			log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
-
-			switch update.Message.Command() {
-			case "help":
-				some_sub.Help(update.Message)
-			case "list":
-				some_sub.List(update.Message)
-			default:
-				some_sub.Default(update.Message)
-
-			}
-
-		}
+		commander.HandleUpdate(update)
 	}
 }

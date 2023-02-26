@@ -1,9 +1,17 @@
 package commands
 
 import (
+	"log"
+
 	"githab.com/telegrammbot/bot/internal/service/product"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
+
+// var registeredCommands = map[string]func(c *Commander, msg *tgbotapi.Message){}
+
+func test_function() {
+
+}
 
 type Commander struct {
 	bot            *tgbotapi.BotAPI
@@ -17,6 +25,55 @@ func NewCommander(
 	return &Commander{
 		bot:            bot,
 		productService: productService,
+	}
+}
+
+func (c *Commander) HandleUpdate(update tgbotapi.Update) {
+
+	// НА КРАЙНИЙ СЛУЧАЙ (ПРОТИВ ПАНИКИ)
+	defer func() {
+		if panicValue := recover(); panicValue != nil {
+			log.Printf("Recover from panic")
+		}
+	}()
+
+	if update.CallbackQuery != nil {
+		msg := tgbotapi.NewMessage(
+			update.CallbackQuery.Message.Chat.ID,
+			"Data: "+update.CallbackQuery.Data)
+		// msg.ReplyToMessageID = update.Message.MessageID
+		c.bot.Send(msg)
+		return
+	}
+
+	if update.Message == nil {
+		return
+	}
+
+	// command, ok := registeredCommands[update.Message.Command()]
+
+	// if ok {
+	// 	command(c, update.Message)
+	// } else {
+	// 	c.Default(update.Message)
+	// }
+
+	switch update.Message.Command() {
+	case "help":
+		c.Help(update.Message)
+	case "list":
+		c.List(update.Message)
+	case "get":
+		c.Get(update.Message)
+	case "edit":
+		c.Edit(update.Message)
+	case "delete":
+		c.Delete(update.Message)
+	case "new":
+		c.New(update.Message)
+	default:
+		c.Default(update.Message)
+
 	}
 }
 

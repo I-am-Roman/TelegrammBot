@@ -6,7 +6,7 @@ import (
 
 func (c *Commander) List(inputMessage *tgbotapi.Message) {
 
-	outputMsg := "Here all products: \n\n"
+	outputMsg := "Here all products: \n"
 	products := c.productService.List()
 	for _, product := range products {
 		outputMsg = outputMsg + product.Title
@@ -14,5 +14,16 @@ func (c *Commander) List(inputMessage *tgbotapi.Message) {
 	}
 
 	msg := tgbotapi.NewMessage(inputMessage.Chat.ID, outputMsg)
+
+	msg.ReplyMarkup = tgbotapi.NewInlineKeyboardMarkup(
+		tgbotapi.NewInlineKeyboardRow(
+			tgbotapi.NewInlineKeyboardButtonData("Next page", "Some data"),
+		),
+	)
+
 	c.bot.Send(msg)
 }
+
+// func init() {
+// 	registeredCommands["list"] = (*Commander).List
+// }
